@@ -10,20 +10,23 @@
     
     
     
-    <div id="map">
-       var map = new mapboxgl.Map({
-  container: 'map', // container id
-  style: 'mapbox://styles/immmor/ck6mxc2qh1k891iplwlt3wwhk' // replace this with your style URL
-});
-      </div>
-<div class="map-overlay" id="features"><h2>US population density</h2><div id="pd"><p>Hover over a state!</p></div></div>
-<div class="map-overlay" id="legend"></div>
+    
     
 
 
   </head>
   <body>
     
+      <div id="map">
+          <script>
+       var map = new mapboxgl.Map({
+  container: 'map', // container id
+  style: 'mapbox://styles/immmor/ck6mxc2qh1k891iplwlt3wwhk' // replace this with your style URL
+});  </script>
+      </div>
+<div class="map-overlay" id="features"><h2>US population density</h2><div id="pd"><p>Hover over a state!</p></div></div>
+<div class="map-overlay" id="legend"></div>
+      
       
    <script>
 
