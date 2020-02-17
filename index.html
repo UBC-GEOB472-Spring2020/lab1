@@ -1,35 +1,192 @@
-<!DOCTYPE html><html><head>
-    
-    
-    
-    <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet">
- 
-    <meta charset="utf-8" />
-    
-  </head>
-  <body>
-    
-   <div id="map">
-        
-      </div>  
-<div class="map-overlay" id="features"><h2>US population density</h2><div id="pd"><p>Hover over a state!</p></div></div>
-<div class="map-overlay" id="legend"></div>
-      
-      
-   <script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Play map locations as a slideshow</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+</style>
+</head>
+<body>
+<style>
+    .map-overlay-container {
+        position: absolute;
+        width: 25%;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        z-index: 1;
+    }
 
-    mapboxgl.accessToken = 'pk.eyJ1IjoiaW1tbW9yIiwiYSI6ImNrNmxhYTZvcDA5cTgzZHBkOThxMTl3N2IifQ.St9SZGWOIL04YeKFSuzYBw';
+    .map-overlay {
+        font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        background-color: #fff;
+        border-radius: 3px;
+        padding: 10px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .map-overlay h2,
+    .map-overlay p {
+        margin: 0 0 10px;
+    }
+</style>
+
+<div id="map"></div>
+
+<div class="map-overlay-container">
+    <div class="map-overlay">
+        <h2 id="location-title"></h2>
+        <p id="location-description"></p>
+        <small
+            >Text credit:
+            <a target="_blank" href="https://www.wikipedia.org/"
+                >wikipedia</a
+            ></small
+        >
+    </div>
+</div>
+
+<script>
+	mapboxgl.accessToken = 'pk.eyJ1IjoiaW1tbW9yIiwiYSI6ImNrNmxhYTZvcDA5cTgzZHBkOThxMTl3N2IifQ.St9SZGWOIL04YeKFSuzYBw';
     var map = new mapboxgl.Map({
-  container: 'map', // container id
-  style: 'mapbox://styles/immmor/ck6mxc2qh1k891iplwlt3wwhk' 
-});
-    
-     
-   </script>   
+        container: 'map',
+        style: 'mapbox://styles/immmor/ck6qy8bsk0mq01irxcyfhidd3',
+      //mapbox://styles/mapbox/streets-v11
+        center: [-123.0824, 49.2501],
+        maxZoom: 16,
+        minZoom: 9,
+        zoom: 9.68
+    });
 
-  
+    var title = document.getElementById('location-title');
+    var description = document.getElementById('location-description');
+
+    var locations = [
+        {
+            'id': '2',
+            'title': 'UBC',
+            'description':
+                "The University of British Columbia is a public research university with campuses in Vancouver and Kelowna, British Columbia. Established in 1908, UBC is British Columbia's oldest university. The university has ranked among the top three universities in Canada.",
+            'camera': {
+                center: [-123.2460, 49.2606],
+                zoom: 13.1,
+                pitch: 50
+            }
+        },
+        {
+            'id': '3',
+            'title': 'Vancouver Airport',
+            'description':
+                "Vancouver International Airport is an international airport in Richmond, British Columbia. It is the primary international airport serving Vancouver, about 12 km from Downtown Vancouver. It is the second busiest airport in Canada by aircraft movements and passengers, behind Toronto Pearson International Airport.",
+            'camera': {
+                center: [-123.1815, 49.1967],
+                bearing: -8.9,
+                zoom: 13.1
+            }
+        },
+        {
+            'id': '1',
+            'title': 'Downtown Vancouver',
+            'description':
+                'Downtown is known for a buzzing nightlife scene on neon-lit Granville Street, with raucous bars, clubs, and live bands at the art deco Commodore Ballroom. By day, it’s a busy shopping hub of chain and luxury boutiques, plus high-end department stores in the CF Pacific Centre mall. Food trucks and casual lunch spots dot the area, and cruise liners depart from Canada Place, a terminal designed to look like a ship',
+            'camera': {
+                center: [-123.1171, 49.2820],
+                bearing: 25.3,
+                zoom: 13.5
+            }
+        },
+        {
+            'id': '4',
+            'title': 'Richmond Night Market',
+            'description':
+                "The Richmond Night Market is an annual night market held through the summer months in Richmond, British Columbia, Canada. It runs on weekends and is held near Bridgeport Station and River Rock Casino.",
+            'camera': {
+                center: [-123.133123, 49.193570],
+                bearing: 36,
+                zoom: 13.37
+            }
+        },
+        {
+            'id': '5',
+            'title': 'Playland at the PNE',
+            'description':
+                'Playland is an amusement park in Vancouver, British Columbia, Canada. It is located in Hastings Park and is the oldest amusement park in Canada. The regular season lasts from May to the end of September every year. The park reopens for Fright Nights from mid October to the Halloween weekend.',
+            'camera': {
+                center: [-123.0362, 49.2816],
+                bearing: 28.4,
+                zoom: 13.64
+            }
+        },
+        {
+            'title': 'Vancouver',
+            'description':
+                'Vancouver, a bustling west coast seaport in British Columbia, is among Canada’s densest, most ethnically diverse cities. A popular filming location, it’s surrounded by mountains, and also has thriving art, theatre and music scenes. Vancouver Art Gallery is known for its works by regional artists, while the Museum of Anthropology houses preeminent First Nations collections.',
+            'camera': {
+                center: [-123.0824, 49.2501],
+                zoom: 10.68,
+                bearing: 0,
+                pitch: 0
+            }
+        }
+    ];
+
+    function highlightBorough(code) {
+        // Only show the polygon feature that cooresponds to `borocode` in the data
+        map.setFilter('highlight', ['==', 'borocode', code]);
+    }
+
+    function playback(index) {
+        title.textContent = locations[index].title;
+        description.textContent = locations[index].description;
+
+        highlightBorough(locations[index].id ? locations[index].id : '');
+
+        // Animate the map position based on camera properties
+        map.flyTo(locations[index].camera);
+
+        map.once('moveend', function() {
+            // Duration the slide is on screen after interaction
+            window.setTimeout(function() {
+                // Increment index
+                index = index + 1 === locations.length ? 0 : index + 1;
+                playback(index);
+            }, 3000); // After callback, show the location for 3 seconds.
+        });
+    }
+
+    // Display the last title/description first
+    title.textContent = locations[locations.length - 1].title;
+    description.textContent = locations[locations.length - 1].description;
+
+    map.on('load', function() {
+        map.addSource('boroughs', {
+            'type': 'vector',
+            'url': 'mapbox://mapbox.8ibmsn6u'
+        });
+        map.addLayer(
+            {
+                'id': 'highlight',
+                'type': 'fill',
+                'source': 'boroughs',
+                'source-layer': 'original',
+                'paint': {
+                    'fill-color': '#fd6b50',
+                    'fill-opacity': 0.25
+                },
+                'filter': ['==', 'borocode', '']
+            },
+            'settlement-subdivision-label'
+        ); // Place polygon under the neighborhood labels.
+
+        // Start the playback animation for each borough
+        playback(0);
+    });
+</script>
 
 </body>
-
 </html>
